@@ -2,14 +2,26 @@
 
 
 [[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
+
+[[projects]]
   name = "github.com/ddliu/go-httpclient"
   packages = ["."]
   revision = "72917d81d0423a6235790470d15a4d099e3490f9"
   version = "v0.5.1"
 
 [[projects]]
-  name = "github.com/jinzhu/gorm"
+  name = "github.com/go-sql-driver/mysql"
   packages = ["."]
+  revision = "d523deb1b23d913de5bdada721a6071e71283618"
+  version = "v1.4.0"
+
+[[projects]]
+  name = "github.com/jinzhu/gorm"
+  packages = [".","dialects/mysql"]
   revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
   version = "v1.9.1"
 
@@ -19,9 +31,15 @@
   packages = ["."]
   revision = "04140366298a54a039076d798123ffa108fff46c"
 
+[[projects]]
+  name = "google.golang.org/appengine"
+  packages = ["cloudsql"]
+  revision = "b1f26356af11148e710935ed1ac8a7f5702c7612"
+  version = "v1.1.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d3faec81d8c85c887baf2c8b631b48e01dc88e7c9b6434f6a37666d5891d3bee"
+  inputs-digest = "2934f8f54c527a14c7b758234db50c28d373a121971e9b01b0a3ff8f5e46f5fe"
   solver-name = "gps-cdcl"
   solver-version = 1

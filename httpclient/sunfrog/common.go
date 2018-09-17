@@ -86,5 +86,5 @@ func getMoneyNiche(data string) (string, error) {
 }
 
 func getContentNiche(data string) (string, error) {
-	return "", nil
+	return getDescriptionNiche(data)
 }
