@@ -65,7 +65,7 @@ func (s *Sunfrog) GetAllUrl(data string) ([]string, error) {
 	return res, nil
 }
 
-func (s *Sunfrog) GetDetailNiche(data string) (interface{}, error) {
+func (s *Sunfrog) GetDetailNiche(data, key string) (interface{}, error) {
 	sunTShirt := new(sun.TShirt)
 	url, err := getUrlNiche(data)
 	if err != nil {
@@ -75,7 +75,7 @@ func (s *Sunfrog) GetDetailNiche(data string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	image, err := getMainImageNiche(data)
+	image, err := getMainImageNiche(data, key)
 	if err != nil {
 		return nil, err
 	}

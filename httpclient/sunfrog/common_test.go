@@ -1,8 +1,8 @@
 package sunfrog
 
 import (
-	"testing"
 	"io/ioutil"
+	"testing"
 )
 
 func TestSunfrog_GetTitleNiche(t *testing.T) {
@@ -46,7 +46,7 @@ func TestSunfrog_GetImageNiche(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to read data from file, err: %v", err)
 	}
-	res, err := getMainImageNiche(string(data))
+	res, err := getMainImageNiche(string(data), "shirt")
 	if err != nil {
 		t.Fatalf("failed to get url from data, err: %v", err)
 	}

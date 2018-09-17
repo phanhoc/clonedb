@@ -9,7 +9,7 @@ import (
 type Scanner interface {
 	GetData(string) (string, error)
 	GetAllUrl(string) ([]string, error)
-	GetDetailNiche(string) (interface{}, error)
+	GetDetailNiche(string, string) (interface{}, error)
 }
 
 func NewScanner(vendor common.Vendor) (Scanner, error) {

@@ -1,6 +1,13 @@
 package sunfrog
 
-import "testing"
+import (
+	"github.com/phanhoc/clonedb/common"
+	"os"
+	"path"
+	"path/filepath"
+	"testing"
+	"time"
+)
 
 func TestSunfrog_GetData(t *testing.T) {
 	scanner, _ := NewSunfrogScanner()
@@ -10,4 +17,27 @@ func TestSunfrog_GetData(t *testing.T) {
 	}
 	t.Log(res)
 
+}
+
+func TestTime(t *testing.T) {
+
+	currentTime := time.Now().Local()
+	subFolder := currentTime.Format("20060102")
+	filename := path.Join(common.PATH_MAIN_IMAGES, subFolder, "shirt", "test.txt")
+	path := filepath.Dir(filename)
+	t.Log(path)
+	if err := common.WriteDataToFile(filename, []byte("test")); err != nil {
+		t.Logf("WriteDataToFile %v", err)
+	}
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		t.Log("here")
+		if e := os.Mkdir(path, 0600); e != nil {
+			t.Logf("err %v", e)
+		}
+
+	}
+	_, err := os.Create(filename)
+	if err != nil {
+		t.Errorf("failed to create file: %s, err: %v", filename, err)
+	}
 }

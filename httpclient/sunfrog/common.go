@@ -8,8 +8,10 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 )
 
 func parseData(regex, data string) (string, error) {
@@ -42,7 +44,7 @@ func getUrlNiche(data string) (string, error) {
 	return parseData(urlRegex, data)
 }
 
-func getMainImageNiche(data string) (string, error) {
+func getMainImageNiche(data, key string) (string, error) {
 	mainImageRegex := "<meta property=\"og:image\" content='(.*?)'/>"
 	result, err := parseData(mainImageRegex, data)
 	if err != nil {
@@ -56,7 +58,13 @@ func getMainImageNiche(data string) (string, error) {
 
 	defer response.Body.Close()
 	name := path.Base(result)
-	filename := path.Join(common.PATH_MAIN_IMAGES, name)
+	currentTime := time.Now().Local()
+	subFolder := currentTime.Format("20060102")
+	filename := path.Join(common.PATH_MAIN_IMAGES, subFolder, key, name)
+	path := filepath.Dir(filename)
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.Mkdir(path, 0600)
+	}
 	file, err := os.Create(filename)
 	if err != nil {
 		return "", fmt.Errorf("failed to create file: %s, err: %v", filename, err)

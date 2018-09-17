@@ -13,8 +13,8 @@ const (
 )
 
 const (
-	PATH_MAIN_IMAGES string = "./datatest/images"
+	PATH_MAIN_IMAGES string = "D:\\Projects\\gows\\src\\github.com\\phanhoc\\clonedb\\datatest\\images"
 	SERVER                  = "https://www.sunfrog.com/search/?cId=0&cName=&search="
 )
 
-const MYSQL_CONN = "root:@tcp(localhost:3307)/sunfrog"
+const MYSQL_CONN = "root:@tcp(localhost:3306)/sunfrog"

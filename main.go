@@ -20,14 +20,14 @@ import (
 
 func main() {
 	key := "shirt"
-	key = common.SERVER + key
+	url := common.SERVER + key
 	fmt.Println(fmt.Sprintf("Starting clone data from %s", key))
 	sqlDB, err := setupDb()
 	if err != nil {
 		log.Fatalf("failed to setup db, %v", err)
 	}
 	c := make(chan []*sun.TShirt)
-	go pullData(c)
+	go pullData(url, key, c)
 
 	listNiche := <-c
 	fmt.Println(spew.Sdump(listNiche))
@@ -36,8 +36,8 @@ func main() {
 	}
 }
 
-func pullData(req chan []*sun.TShirt) {
-	listNiche, err := requestData()
+func pullData(url, key string, req chan []*sun.TShirt) {
+	listNiche, err := requestData(url, key)
 	if err != nil {
 		log.Fatalf("failed to request data from sunfrog, err: %v", err)
 	} else {
@@ -71,12 +71,12 @@ func setupDb() (db.DB, error) {
 	return sqlDb, nil
 }
 
-func requestData() ([]*sun.TShirt, error) {
+func requestData(url, key string) ([]*sun.TShirt, error) {
 	scanner, err := sc.NewScanner(common.SUNFROG)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create new scanner, err: %v", err)
 	}
-	res, err := scanner.GetData(common.SERVER)
+	res, err := scanner.GetData(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to search all niche by key, err: %v", err)
 	}
@@ -91,7 +91,7 @@ func requestData() ([]*sun.TShirt, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to query detail niche, url: %s, err: %v", url, err)
 		}
-		detail, err := scanner.GetDetailNiche(dataNiche)
+		detail, err := scanner.GetDetailNiche(dataNiche, key)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse detail niche, err: %v", err)
 		}
