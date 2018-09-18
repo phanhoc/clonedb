@@ -9,6 +9,7 @@ import (
 type Scanner interface {
 	GetData(string) (string, error)
 	GetAllUrl(string) ([]string, error)
+	GetContinueUrl(string) (string, error)
 	GetDetailNiche(string, string) (interface{}, error)
 }
 

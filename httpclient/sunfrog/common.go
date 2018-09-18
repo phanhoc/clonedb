@@ -1,7 +1,6 @@
 package sunfrog
 
 import (
-	"errors"
 	"fmt"
 	"github.com/phanhoc/clonedb/common"
 	"io"
@@ -9,44 +8,32 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
+	"errors"
 )
-
-func parseData(regex, data string) (string, error) {
-	re, err := regexp.Compile(regex)
-	if err != nil {
-		return "", fmt.Errorf("failed to create regex expresion, regex: %s, err: %v", regex, err)
-	}
-	result := re.FindStringSubmatch(data)
-	if len(result) < 2 {
-		return "", fmt.Errorf("unable to find sub string")
-	}
-	return result[1], nil
-}
 
 func getTitleNiche(data string) (string, error) {
 	titleRegex := "<meta property=\"og:title\" content=\"(.*?)\"/>"
 
-	return parseData(titleRegex, data)
+	return common.ParseData(titleRegex, data)
 }
 
 func getDescriptionNiche(data string) (string, error) {
 	descriptionRegex := "<meta property=\"og:description\" content=\"(.*?)\"/>"
 
-	return parseData(descriptionRegex, data)
+	return common.ParseData(descriptionRegex, data)
 }
 
 func getUrlNiche(data string) (string, error) {
 	urlRegex := "<meta property=\"og:url\" content=\"(.*?)\"/>"
 
-	return parseData(urlRegex, data)
+	return common.ParseData(urlRegex, data)
 }
 
 func getMainImageNiche(data, key string) (string, error) {
 	mainImageRegex := "<meta property=\"og:image\" content='(.*?)'/>"
-	result, err := parseData(mainImageRegex, data)
+	result, err := common.ParseData(mainImageRegex, data)
 	if err != nil {
 		return "", fmt.Errorf("failed to parse data, regex: %s, err: %v", mainImageRegex, err)
 	}
@@ -63,7 +50,7 @@ func getMainImageNiche(data, key string) (string, error) {
 	filename := path.Join(common.PATH_MAIN_IMAGES, subFolder, key, name)
 	path := filepath.Dir(filename)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.Mkdir(path, 0600)
+		os.MkdirAll(path, os.ModePerm)
 	}
 	file, err := os.Create(filename)
 	if err != nil {
@@ -84,13 +71,24 @@ func getMoneyNiche(data string) (string, error) {
 	afterRegex := "</strong>"
 	firstIndex := strings.Index(data, moneyRegex)
 	if firstIndex == -1 {
-		return "", errors.New("unable to find sub string")
+		moneyRegex = "<strong style=\"display:block; margin-bottom:0px; "
+		firstIndex = strings.Index(data, moneyRegex)
+		if firstIndex == -1 {
+			return "", errors.New("unable to find sub string")
+		}
+		afterData := data[firstIndex+len(moneyRegex):]
+		lastIndex := strings.Index(afterData, afterRegex)
+		moneyData := afterData[:lastIndex]
+		moneyIndex := strings.LastIndex(moneyData, "$")
+		return strings.TrimSpace(moneyData[moneyIndex+1:]), nil
+	} else {
+		afterData := data[firstIndex+len(moneyRegex):]
+		lastIndex := strings.Index(afterData, afterRegex)
+		moneyData := afterData[:lastIndex]
+		moneyIndex := strings.LastIndex(moneyData, "$")
+		return strings.TrimSpace(moneyData[moneyIndex+1:]), nil
 	}
-	afterData := data[firstIndex+len(moneyRegex):]
-	lastIndex := strings.Index(afterData, afterRegex)
-	moneyData := afterData[:lastIndex]
-	moneyIndex := strings.LastIndex(moneyData, "$")
-	return strings.TrimSpace(moneyData[moneyIndex+1:]), nil
+
 }
 
 func getContentNiche(data string) (string, error) {

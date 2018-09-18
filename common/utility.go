@@ -5,6 +5,8 @@ import (
 	"os"
 	"io/ioutil"
 	"errors"
+	"regexp"
+	"fmt"
 )
 
 // check string is empty
@@ -23,4 +25,16 @@ func WriteDataToFile(filename string, data []byte) error {
 	}
 
 	return ioutil.WriteFile(filename, data, 0600)
+}
+
+func ParseData(regex, data string) (string, error) {
+	re, err := regexp.Compile(regex)
+	if err != nil {
+		return "", fmt.Errorf("failed to create regex expresion, regex: %s, err: %v", regex, err)
+	}
+	result := re.FindStringSubmatch(data)
+	if len(result) < 2 {
+		return "", fmt.Errorf("unable to find sub string")
+	}
+	return result[1], nil
 }

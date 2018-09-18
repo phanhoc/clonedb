@@ -54,7 +54,7 @@ func TestSunfrog_GetImageNiche(t *testing.T) {
 }
 
 func TestSunfrog_GetMoneyNiche(t *testing.T) {
-	data, err := ioutil.ReadFile("../../datatest/one_shirt.txt")
+	data, err := ioutil.ReadFile("../../datatest/one_normal_shirt.txt")
 	if err != nil {
 		t.Fatalf("failed to read data from file, err: %v", err)
 	}
